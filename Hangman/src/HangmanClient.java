@@ -3,6 +3,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -16,7 +17,7 @@ public class HangmanClient {
 	 */
 	public static void main(String[] args) throws IOException {
 		Socket clientSocket = null;
-
+		PrintWriter out = null;
 		try {
 			clientSocket = new Socket(args[0], 1234);
 		} catch (UnknownHostException e) {
@@ -28,41 +29,18 @@ public class HangmanClient {
 			System.exit(1);
 		}
 		
-		BufferedInputStream in = null;
-		BufferedOutputStream out = null;
-		
-		in = new BufferedInputStream(clientSocket.getInputStream());
-		out = new BufferedOutputStream(clientSocket.getOutputStream());
-		
-		byte[] toServer = args[1].getBytes();
-		out.write(toServer);
-		out.flush();
-		
-		byte[] fromServer = new byte[1024];
-		in.read(fromServer, 0, fromServer.length);
-		
-		System.out.println(new String(fromServer));
-		
-		Scanner chat = new Scanner(System.in);
-		
-			while (true)
-				            {                      		
-				                String input = chat.nextLine(); 
-				                toServer = input.getBytes();
-				                out.write(toServer);
-				             //   out.flush();
-							
-				                if(in.available() != 0){
-				                	in.read(fromServer, 0, fromServer.length);		
-				            		System.out.println(new String(fromServer));
-				                }
-				
-				            }
-		
-		
-	//	in.close();
-	//	out.close();
-			//	clientSocket.close();
+		 BufferedReader sIn = new BufferedReader(new InputStreamReader( clientSocket.getInputStream()));
+		 BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		 out = new PrintWriter(clientSocket.getOutputStream(), true);
+		   String msg;
+		   
+	        while ((msg = in.readLine()) != null) {
+	            out.println(msg);
+	            System.out.println(sIn.readLine());
+	        }
+		 
+		 
+				clientSocket.close();
 		
 	}
 

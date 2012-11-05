@@ -44,74 +44,37 @@ public class SimpleConnectionHandler extends Thread {
 	
 	
 	public void run() {
-		BufferedInputStream in;
-		BufferedOutputStream out;
-
+		
 		try {
-			in = new BufferedInputStream(clientSocket.getInputStream());
-			out = new BufferedOutputStream(clientSocket.getOutputStream());
-		} catch (IOException e) {
-			System.out.println(e.toString());
-			return;
-		}
-		String startMsg = "startgame";
-		byte[] startGameMsg = new byte [1024];
-		startGameMsg = startMsg.getBytes();
-		
-			byte[] msg = new byte[startGameMsg.length];
-			try {
-				in.read(msg);
-			} catch (IOException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-			int numberOfAttempts = 10;
-			int state = 0;
-			if (new String(msg).equals(startMsg)) {
-				String sWord = null;
-				StringBuffer buffer = null;
-				try {
-				
-					fileRead();
-					word = chooseWord();
-					buffer = new StringBuffer();
-					byte[] sendWord = null; 
-					for(int i=0; i<word.length(); i++) {
-						buffer.append("-");
-					}
-					sWord = buffer.toString();
-					sendWord = sWord.getBytes();
-					out.write(sendWord);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				while(numberOfAttempts > 0 ){
-
-						for (int i=0; i<word.length(); i++){
-                    try {
-						if (word.charAt(i) == in.read()){
-							System.out.println(numberOfAttempts);
-						        buffer.setCharAt(i, (char) in.read());
-						}
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-            }
-				numberOfAttempts--;
-				
-				}
-			}
-			else
-				System.out.println("felfelfel");
-		
-
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+			        clientSocket.getInputStream()));
+			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 			
+			String msg, sWord = null;
+			StringBuffer buffer = null;
+		    while (clientSocket.isConnected()) {
+		    	msg = in.readLine();
+		        if(msg.equals("game start")){
+		        	fileRead();
+					word = chooseWord();
+		        	buffer = new StringBuffer();
+		        	for(int i=0; i<word.length(); i++) {
+						buffer.append("-");
+						sWord = buffer.toString();		
+					}
+		        	out.println(sWord);
+		        }
+		        else
+		        	out.println("");
+		        
+		    }
+		    
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		try {
-			out.close();
-			in.close();
 			clientSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
