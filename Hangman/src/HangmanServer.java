@@ -1,14 +1,16 @@
-import java.io.*;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+
+
 
 public class HangmanServer {
 
+	//HAX
 	
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		Boolean listening = true;
+		boolean listening = true;
 		ServerSocket serverSocket = null;
 
 		try {
