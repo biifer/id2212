@@ -7,6 +7,7 @@ public class SimpleConnectionHandler extends Thread {
 	private Socket clientSocket;
 	static String word = null;
 	static ArrayList<String> wordList = new ArrayList<String>();
+	static ArrayList<Character> guessList = new ArrayList<Character>();
 	int numberOfAttempts = 10;
 
 	public SimpleConnectionHandler(Socket clientSocket) {
@@ -51,10 +52,34 @@ public class SimpleConnectionHandler extends Thread {
 
 			String msg, secretWord = null;
 			StringBuffer buffer = null;
-			
+
 			while (clientSocket.isConnected()) {
 				msg = in.readLine();
-				if (msg.equals("game start")) {
+				if (msg.length() == 1) {
+					// This is a normal letter guess.
+					char letter = msg.charAt(0);
+					if (!guessList.contains(letter)) {
+						guessList.add(letter);
+						System.out.println("Player guessed: " + letter);
+						for (int i = 0; i < word.length(); i++) {
+							if (word.charAt(i) == letter) {
+								buffer.setCharAt(i, letter);
+							}
+
+						}
+						secretWord = buffer.toString();
+						out.println(secretWord);
+						numberOfAttempts--;
+						if (secretWord.indexOf("-") == -1) {
+							out.println("You Guessed right! The secret word was: " + word);
+						}
+					} else {
+						out.println("You have already guessed: " + letter);
+						out.print("Try again with another letter or a whole word: ");
+					}
+				} else if (msg.equals("game start")) {
+					numberOfAttempts = 10;
+					System.out.println("game start message recieved");
 					fileRead();
 					word = chooseWord();
 					buffer = new StringBuffer();
@@ -63,29 +88,22 @@ public class SimpleConnectionHandler extends Thread {
 						secretWord = buffer.toString();
 					}
 					out.println(secretWord);
-					System.out.println(word);
-
-					while (numberOfAttempts > 0) {
-						char a = in.readLine().charAt(0);
-						for (int i = 0; i < word.length(); i++) {
-							if (word.charAt(i) == a) {
-								buffer.setCharAt(i, a);
-
-							}
-
-						}
-						secretWord = buffer.toString();
-						out.println(secretWord);
+					System.out.println("The secret word is: " + word);
+				} else {
+					if (msg.equals(word)) {
+						out.println("You guessed right! The secret word was: "
+								+ word);
+						guessList.clear();
+					} else {
 						numberOfAttempts--;
-						if (secretWord.indexOf("-") == -1) {
-							out.println("You Guessed right!");
-						}
+						out.println("Wrong. You have " + numberOfAttempts + " "
+								+ "attempts left.");
 					}
-					if (numberOfAttempts == 0)
-						out.println("Game Over");
-				} else
-					out.println("");
 
+				}
+
+				if (numberOfAttempts == 0)
+					out.println("Game Over. Send 'start game' to start a new game.");
 			}
 
 		} catch (IOException e1) {
