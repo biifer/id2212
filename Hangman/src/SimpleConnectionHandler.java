@@ -9,7 +9,8 @@ public class SimpleConnectionHandler extends Thread {
 	static ArrayList<String> wordList = new ArrayList<String>();
 	static ArrayList<Character> guessList = new ArrayList<Character>();
 	int numberOfAttempts = 10;
-
+	static String clientMessage, secretWord = null;
+	static StringBuffer buffer = null;
 	public SimpleConnectionHandler(Socket clientSocket) {
 		this.clientSocket = clientSocket;
 	}
@@ -50,14 +51,13 @@ public class SimpleConnectionHandler extends Thread {
 			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),
 					true);
 
-			String msg, secretWord = null;
-			StringBuffer buffer = null;
+			
 
 			while (clientSocket.isConnected()) {
-				msg = in.readLine();
-				if (msg.length() == 1) {
+				clientMessage = in.readLine();
+				if (clientMessage.length() == 1) {
 					// This is a normal letter guess.
-					char letter = msg.charAt(0);
+					char letter = clientMessage.charAt(0);
 					if (!guessList.contains(letter)) {
 						guessList.add(letter);
 						System.out.println("Player guessed: " + letter);
@@ -75,9 +75,11 @@ public class SimpleConnectionHandler extends Thread {
 						}
 					} else {
 						out.println("You have already guessed: " + letter);
+						out.println(secretWord);
 						out.print("Try again with another letter or a whole word: ");
+						
 					}
-				} else if (msg.equals("game start")) {
+				} else if (clientMessage.equals("game start")) {
 					numberOfAttempts = 10;
 					System.out.println("game start message recieved");
 					fileRead();
@@ -90,7 +92,7 @@ public class SimpleConnectionHandler extends Thread {
 					out.println(secretWord);
 					System.out.println("The secret word is: " + word);
 				} else {
-					if (msg.equals(word)) {
+					if (clientMessage.equals(word)) {
 						out.println("You guessed right! The secret word was: "
 								+ word);
 						guessList.clear();
