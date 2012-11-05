@@ -76,10 +76,9 @@ public class SimpleConnectionHandler extends Thread {
 						}
 						secretWord = buffer.toString();
 						out.println(secretWord);
+						numberOfAttempts--;
 						if (secretWord.indexOf("-") == -1) {
 							out.println("You Guessed right!");
-							numberOfAttempts--;
-
 						}
 					}
 					if (numberOfAttempts == 0)
