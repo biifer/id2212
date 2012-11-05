@@ -1,15 +1,7 @@
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Random;
-
-
 
 public class SimpleConnectionHandler extends Thread {
 	private Socket clientSocket;
@@ -80,19 +72,12 @@ public class SimpleConnectionHandler extends Thread {
 				
 					fileRead();
 					word = chooseWord();
-					String hyphen = "ivangay";
+					String hyphen = "-";
 					byte[] sendWord = null; 
 					for(int i=0; i<word.length(); i++) {
 						sendWord = hyphen.getBytes();
 						out.write(sendWord);
 						out.flush();
-						msg = null;
-					}
-					while ( numberOfAttempts > 0 ){
-					in.read(msg);
-					System.out.println(new String(msg));
-					//if()
-					numberOfAttempts--;
 					}
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -102,7 +87,8 @@ public class SimpleConnectionHandler extends Thread {
 				
 				
 			}
-
+			else
+				System.out.println("felfelfel");
 		
 		try {
 			out.close();
