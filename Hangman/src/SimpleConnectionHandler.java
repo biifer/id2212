@@ -52,6 +52,7 @@ public class SimpleConnectionHandler extends Thread {
 			
 			String msg, sWord = null;
 			StringBuffer buffer = null;
+			int numberOfAttempts = 10;
 		    while (clientSocket.isConnected()) {
 		    	msg = in.readLine();
 		        if(msg.equals("game start")){
@@ -63,10 +64,33 @@ public class SimpleConnectionHandler extends Thread {
 						sWord = buffer.toString();		
 					}
 		        	out.println(sWord);
+		        	System.out.println(word);
+		        	
+		        	  while(numberOfAttempts > 0 ){
+		        		  char a = in.readLine().charAt(0);
+							for (int i=0; i<word.length(); i++){
+							if (word.charAt(i) == a){
+							        buffer.setCharAt(i, a);
+							        	
+							}
+						
+		        }
+							sWord = buffer.toString();
+							out.println(sWord);
+							if (sWord.indexOf("-") == -1){
+								 out.println("You Guessed right!");
+					numberOfAttempts--;
+					 
+	                }
+					}
+		        	  if(numberOfAttempts == 0)
+		        		  out.println("Game Over");
 		        }
 		        else
 		        	out.println("");
 		        
+		        
+		      
 		    }
 		    
 		} catch (IOException e1) {
