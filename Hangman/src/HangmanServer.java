@@ -6,7 +6,7 @@ import java.net.Socket;
 
 public class HangmanServer {
 
-	//HAX
+	//HAX - v2
 	
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
