@@ -5,14 +5,13 @@ import java.util.Random;
 
 public class SimpleConnectionHandler extends Thread {
 	private Socket clientSocket;
+	static String word = null;
+	static ArrayList<String> wordList = new ArrayList<String>();
+	int numberOfAttempts = 10;
 
 	public SimpleConnectionHandler(Socket clientSocket) {
 		this.clientSocket = clientSocket;
 	}
-
-	static String word = null;
-	static int port = 1234;
-	static ArrayList<String> wordList = new ArrayList<String>();
 
 	@SuppressWarnings("resource")
 	public static void fileRead() {
@@ -41,58 +40,55 @@ public class SimpleConnectionHandler extends Thread {
 		Random rand = new Random();
 		return wordList.get(rand.nextInt(wordList.size()));
 	}
-	
-	
+
 	public void run() {
-		
+
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(
-			        clientSocket.getInputStream()));
-			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-			
-			String msg, sWord = null;
+					clientSocket.getInputStream()));
+			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),
+					true);
+
+			String msg, secretWord = null;
 			StringBuffer buffer = null;
-			int numberOfAttempts = 10;
-		    while (clientSocket.isConnected()) {
-		    	msg = in.readLine();
-		        if(msg.equals("game start")){
-		        	fileRead();
+			
+			while (clientSocket.isConnected()) {
+				msg = in.readLine();
+				if (msg.equals("game start")) {
+					fileRead();
 					word = chooseWord();
-		        	buffer = new StringBuffer();
-		        	for(int i=0; i<word.length(); i++) {
+					buffer = new StringBuffer();
+					for (int i = 0; i < word.length(); i++) {
 						buffer.append("-");
-						sWord = buffer.toString();		
+						secretWord = buffer.toString();
 					}
-		        	out.println(sWord);
-		        	System.out.println(word);
-		        	
-		        	  while(numberOfAttempts > 0 ){
-		        		  char a = in.readLine().charAt(0);
-							for (int i=0; i<word.length(); i++){
-							if (word.charAt(i) == a){
-							        buffer.setCharAt(i, a);
-							        	
+					out.println(secretWord);
+					System.out.println(word);
+
+					while (numberOfAttempts > 0) {
+						char a = in.readLine().charAt(0);
+						for (int i = 0; i < word.length(); i++) {
+							if (word.charAt(i) == a) {
+								buffer.setCharAt(i, a);
+
 							}
-						
-		        }
-							sWord = buffer.toString();
-							out.println(sWord);
-							if (sWord.indexOf("-") == -1){
-								 out.println("You Guessed right!");
-					numberOfAttempts--;
-					 
-	                }
+
+						}
+						secretWord = buffer.toString();
+						out.println(secretWord);
+						if (secretWord.indexOf("-") == -1) {
+							out.println("You Guessed right!");
+							numberOfAttempts--;
+
+						}
 					}
-		        	  if(numberOfAttempts == 0)
-		        		  out.println("Game Over");
-		        }
-		        else
-		        	out.println("");
-		        
-		        
-		      
-		    }
-		    
+					if (numberOfAttempts == 0)
+						out.println("Game Over");
+				} else
+					out.println("");
+
+			}
+
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
