@@ -66,30 +66,49 @@ public class SimpleConnectionHandler extends Thread {
 				e2.printStackTrace();
 			}
 			int numberOfAttempts = 10;
+			int state = 0;
 			if (new String(msg).equals(startMsg)) {
-
+				String sWord = null;
+				StringBuffer buffer = null;
 				try {
 				
 					fileRead();
 					word = chooseWord();
-					String hyphen = "-";
+					buffer = new StringBuffer();
 					byte[] sendWord = null; 
 					for(int i=0; i<word.length(); i++) {
-						sendWord = hyphen.getBytes();
-						out.write(sendWord);
-						out.flush();
+						buffer.append("-");
 					}
+					sWord = buffer.toString();
+					sendWord = sWord.getBytes();
+					out.write(sendWord);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				
+				while(numberOfAttempts > 0 ){
+
+						for (int i=0; i<word.length(); i++){
+                    try {
+						if (word.charAt(i) == in.read()){
+							System.out.println(numberOfAttempts);
+						        buffer.setCharAt(i, (char) in.read());
+						}
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+            }
+				numberOfAttempts--;
 				
-				
+				}
 			}
 			else
 				System.out.println("felfelfel");
 		
+
+			
 		try {
 			out.close();
 			in.close();

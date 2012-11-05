@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 
 
@@ -42,12 +43,26 @@ public class HangmanClient {
 		
 		System.out.println(new String(fromServer));
 		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String input = br.readLine();
-		toServer  = input.getBytes();
-		out.write(toServer);
-		in.close();
-		out.close();
+		Scanner chat = new Scanner(System.in);
+		
+			while (true)
+				            {                      		
+				                String input = chat.nextLine(); 
+				                toServer = input.getBytes();
+				                out.write(toServer);
+				             //   out.flush();
+							
+				                if(in.available() != 0){
+				                	in.read(fromServer, 0, fromServer.length);		
+				            		System.out.println(new String(fromServer));
+				                }
+				
+				            }
+		
+		
+	//	in.close();
+	//	out.close();
+			//	clientSocket.close();
 		
 	}
 

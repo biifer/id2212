@@ -24,7 +24,7 @@ public class HangmanServer {
 			System.out.println("accepted, starting new thread");
 			(new SimpleConnectionHandler(clientSocket)).start();
 		}
-
+		serverSocket.close();
 	}
 
 }
