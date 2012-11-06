@@ -22,19 +22,18 @@ public class SimpleConnectionHandler extends Thread {
 		this.clientSocket = clientSocket;
 	}
 
-	@SuppressWarnings("resource")
 	public static void fileRead() {
 		try {
 
 			FileInputStream fStream = new FileInputStream("src\\words.txt");
 			DataInputStream fIn = new DataInputStream(fStream);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					fIn));
-			String line = reader.readLine();
 
-			while (line != null) {
-				wordList.add(line);
-				line = reader.readLine();
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(fIn));
+			
+			while ((word = reader.readLine()) != null) {
+					wordList.add(word);				
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
