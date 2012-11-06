@@ -18,6 +18,7 @@ public class HangmanClient {
 	public static void main(String[] args) throws IOException {
 		Socket clientSocket = null;
 		PrintWriter out = null;
+
 		try {
 			clientSocket = new Socket(args[0], 1234);
 		} catch (UnknownHostException e) {
@@ -29,17 +30,18 @@ public class HangmanClient {
 			System.exit(1);
 		}
 		
-		 BufferedReader sIn = new BufferedReader(new InputStreamReader( clientSocket.getInputStream()));
+
 		 BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		 out = new PrintWriter(clientSocket.getOutputStream(), true);
-		   String msg;
-		   
+		 (new ClientCommunication(clientSocket)).start();
+		 
+		 String msg;
 	        while ((msg = in.readLine()) != null) {
 	            out.println(msg);
-	            System.out.println(sIn.readLine());
+	            
 	        }
-		 
-		 
+	        	in.close();
+	        	out.close();
 				clientSocket.close();
 		
 	}
