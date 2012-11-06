@@ -12,9 +12,8 @@ public class SimpleConnectionHandler extends Thread {
 	static String clientMessage, secretWord = null;
 	static StringBuffer buffer = null;
 	private static final int IN_GAME = 1;
-	int state, round = 0;
+	int state, totalScore, round = 0;
 	boolean rightGuess;
-	int totalScore;
 	BufferedReader in = null;
 	PrintWriter out;
 
@@ -28,11 +27,12 @@ public class SimpleConnectionHandler extends Thread {
 			FileInputStream fStream = new FileInputStream("src\\words.txt");
 			DataInputStream fIn = new DataInputStream(fStream);
 
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(fIn));
-			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					fIn));
+
 			while ((word = reader.readLine()) != null) {
-					wordList.add(word);				
+				word.toLowerCase();
+				wordList.add(word);
 
 			}
 		} catch (Exception e) {
@@ -57,6 +57,7 @@ public class SimpleConnectionHandler extends Thread {
 
 				try {
 					clientMessage = in.readLine();
+					clientMessage.toLowerCase();
 				} catch (IOException e2) {
 					System.out.println("Client disconnected");
 					break;
