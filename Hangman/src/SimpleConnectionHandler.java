@@ -28,15 +28,12 @@ public class SimpleConnectionHandler extends Thread {
 
 			FileInputStream fStream = new FileInputStream("src\\words.txt");
 			DataInputStream fIn = new DataInputStream(fStream);
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(fIn));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					fIn));
 			String line = reader.readLine();
 
 			while (line != null) {
-				String[] wordsLine = line.split(" ");
-				for (String word : wordsLine) {
-					wordList.add(word);
-				}
+				wordList.add(line);
 				line = reader.readLine();
 			}
 		} catch (Exception e) {
@@ -55,10 +52,7 @@ public class SimpleConnectionHandler extends Thread {
 		try {
 			in = new BufferedReader(new InputStreamReader(
 					clientSocket.getInputStream()));
-			out = new PrintWriter(clientSocket.getOutputStream(),
-					true);
-
-
+			out = new PrintWriter(clientSocket.getOutputStream(), true);
 
 			while (true) {
 
@@ -70,7 +64,7 @@ public class SimpleConnectionHandler extends Thread {
 				}
 
 				rightGuess = false;
-				if(state == 0){
+				if (state == 0) {
 					if (clientMessage.equals("start game")) {
 						numberOfAttempts = 10;
 						round = 1;
@@ -87,7 +81,7 @@ public class SimpleConnectionHandler extends Thread {
 					}
 
 				}
-				if(state == IN_GAME){
+				if (state == IN_GAME) {
 
 					if (clientMessage.length() == 1) {
 						// This is a normal letter guess.
@@ -103,9 +97,10 @@ public class SimpleConnectionHandler extends Thread {
 
 							}
 
-							if (!rightGuess){
+							if (!rightGuess) {
 								numberOfAttempts--;
-								out.println("Wrong. You have " + numberOfAttempts + " "
+								out.println("Wrong. You have "
+										+ numberOfAttempts + " "
 										+ "attempts left.");
 
 							}
@@ -114,13 +109,14 @@ public class SimpleConnectionHandler extends Thread {
 							out.println(secretWord);
 
 							if (secretWord.indexOf("-") == -1) {
-								out.println("You Guessed right! The secret word was: " + word);
+								out.println("You Guessed right! The secret word was: "
+										+ word);
 								round = 0;
 								state = 0;
 								guessList.clear();
 								totalScore++;
 								out.println("Total score: " + totalScore);
-								out.println("Send 'start game' to start a new game.");	
+								out.println("Send 'start game' to start a new game.");
 							}
 						} else if (guessList.contains(letter)) {
 							out.println("You have already guessed: " + letter);
@@ -136,27 +132,26 @@ public class SimpleConnectionHandler extends Thread {
 						guessList.clear();
 						totalScore++;
 						out.println("Total score: " + totalScore);
-						out.println("Send 'start game' to start a new game.");	
-					}	 else {
+						out.println("Send 'start game' to start a new game.");
+					} else {
 						numberOfAttempts--;
 						out.println("Wrong. You have " + numberOfAttempts + " "
 								+ "attempts left.");
 						out.println(secretWord);
 					}
 
-
-					if (numberOfAttempts == 0){
-						out.println("Game Over. Send 'start game' to start a new game.");		
+					if (numberOfAttempts == 0) {
+						out.println("Game Over. Send 'start game' to start a new game.");
 						guessList.clear();
 						round = 0;
 						state = 0;
-						if(totalScore > 0)
+						if (totalScore > 0)
 							totalScore--;
 						out.println("Total score: " + totalScore);
 					}
 				}
-				if(round == 1 && state == 0)
-					state = IN_GAME;	
+				if (round == 1 && state == 0)
+					state = IN_GAME;
 			}
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
