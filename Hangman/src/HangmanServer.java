@@ -5,7 +5,7 @@ import java.util.*;
 
 public class HangmanServer {
 
-	
+
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		Boolean listening = true;
@@ -17,7 +17,7 @@ public class HangmanServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		while (listening) {
 			System.out.println("Waiting...");
 			Socket clientSocket = serverSocket.accept();

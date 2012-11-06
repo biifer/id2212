@@ -29,21 +29,21 @@ public class HangmanClient {
 					"the connection to: " + args[0] + "");
 			System.exit(1);
 		}
-		
 
-		 BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		 out = new PrintWriter(clientSocket.getOutputStream(), true);
-		 (new ClientCommunication(clientSocket)).start();
-		 
-		 String msg;
-	        while ((msg = in.readLine()) != null) {
-	            out.println(msg);
-	            
-	        }
-	        	in.close();
-	        	out.close();
-				clientSocket.close();
-		
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		out = new PrintWriter(clientSocket.getOutputStream(), true);
+		(new ClientCommunication(clientSocket)).start();
+
+		String msg;
+		while ((msg = in.readLine()) != null) {
+			out.println(msg);
+
+		}
+		in.close();
+		out.close();
+		clientSocket.close();
+
 	}
 
 }
