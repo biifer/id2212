@@ -3,7 +3,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class SimpleConnectionHandler extends Thread {
+public class ServerCommunication extends Thread {
 	private Socket clientSocket;
 	static String word = null;
 	static ArrayList<String> wordList = new ArrayList<String>();
@@ -17,7 +17,7 @@ public class SimpleConnectionHandler extends Thread {
 	BufferedReader in = null;
 	PrintWriter out;
 
-	public SimpleConnectionHandler(Socket clientSocket) {
+	public ServerCommunication(Socket clientSocket) {
 		this.clientSocket = clientSocket;
 	}
 
